@@ -1,7 +1,7 @@
 {
   "name": "marathon-gh-proxy",
   "private": true,
-  "description": "A web app for using Agile project management with Github.",
+  "description": "A GCloud Function that serves as an API Proxy for GitHub.",
   "author": {
     "name": "Joseph R Miles",
     "email": "me@josephrmiles.com",

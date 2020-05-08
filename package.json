@@ -1,5 +1,5 @@
 {
-  "name": "marathon-gh-proxy",
+  "name": "gcloud-gh-proxy",
   "private": true,
   "description": "A GCloud Function that serves as an API Proxy for GitHub.",
   "author": {
@@ -12,7 +12,7 @@
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joebobmiles/Marathon-GitHubProxy.git"
+    "url": "git+https://github.com/joebobmiles/GCloud-GitHubProxy.git"
   },
   "scripts": {
     "build": "ts",

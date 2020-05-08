@@ -30,7 +30,7 @@ export const ghProxy = (request: Request, response: Response) => {
   /*
   Request the Auth0 Management API access_token
   */
-  const auth0Response = JSON.parse(makeRequest(
+  const auth0Response = makeRequest(
     {
       hostname: process.env.AUTH0_URL,
       path: "/oauth/token",
@@ -42,12 +42,16 @@ export const ghProxy = (request: Request, response: Response) => {
       audience: `${process.env.AUTH0_URL}/api/v2`,
       grant_type: "client_credentials"
     })
-  ))
+  )
 
-  if (auth0Response.access_token === undefined) {
+  if (JSON.parse(auth0Response).access_token === undefined) {
     // TODO: RESPOND WITH AUTH0 ERROR
     console.error(auth0Response)
+    response.status(400).send(auth0Response)
+    return
   }
+
+  const auth0Token = JSON.parse(auth0Response)
 
   /*
   Request the GitHub identity that Auth0 has for the user_id
@@ -58,7 +62,7 @@ export const ghProxy = (request: Request, response: Response) => {
       path: `/api/v2/users/${request.params.user_id}`,
       method: "GET",
       headers: {
-        Authorization: `${auth0Response.token_type} ${auth0Response.access_token}`
+        Authorization: `${auth0Token.token_type} ${auth0Token.access_token}`
       }
     }
   ))
@@ -66,6 +70,8 @@ export const ghProxy = (request: Request, response: Response) => {
   if (ghTokenResponse.identities === undefined) {
     // TODO: RESPOND WITH AUTH0 ERROR
     console.error(ghTokenResponse)
+    response.status(400).send(ghTokenResponse)
+    return
   }
 
 

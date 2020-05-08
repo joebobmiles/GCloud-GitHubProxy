@@ -1,2 +1,4 @@
 node_modules
 functions
+.env
+.env.*

@@ -1,0 +1,26 @@
+name: Build + Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build function
+      run: npm run build
+    
+    - name: Deploy function
+      uses: actions-hub/gcloud@289.0.0
+      env:
+        PROJECT_ID: ${{}}
+        APPLICATION_CREDENTIALS: ${{}}
+      with:
+        args: functions deploy ghProxy --runtime nodejs10 --trigger-http --allow-unauthenticated --source functions/

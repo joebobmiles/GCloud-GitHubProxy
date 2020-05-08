@@ -92,6 +92,5 @@ export const ghProxy = (request: Request, response: Response) => {
   ))
 
 
-
   response.send(gitHubResponse)
 }

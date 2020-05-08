@@ -4,6 +4,9 @@
     "noImplicitAny": true,
     "target": "ES5",
     "module": "CommonJS",
-    "outDir": "functions"
-  }
+    "outDir": "functions",
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

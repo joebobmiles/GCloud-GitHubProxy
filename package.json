@@ -16,11 +16,13 @@
   },
   "scripts": {
     "build": "tsc",
-    "deploy": "exit 1"
+    "deploy": "npm run build && gcloud functions deploy ghProxy --runtime nodejs8 --trigger-http --allow-unauthenticated --source functions/"
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
-    "express": "^4.17.1",
     "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }

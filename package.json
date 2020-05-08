@@ -1,0 +1,21 @@
+{
+  "name": "marathon-gh-proxy",
+  "private": true,
+  "description": "A web app for using Agile project management with Github.",
+  "author": {
+    "name": "Joseph R Miles",
+    "email": "me@josephrmiles.com",
+    "url": "https://josephrmiles.com"
+  },
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": "n/a",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joebobmiles/Marathon-GitHubProxy.git"
+  },
+  "scripts": {
+    "build": "ts",
+    "deploy": "exit 1"
+  }
+}

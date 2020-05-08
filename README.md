@@ -13,3 +13,17 @@ without exposing the GitHub API access token to the app.
 > persisted, so this code would have to be integrated into it's own stand
 > alone server with a Redis instance or something to persist the data between
 > requests.
+
+## How it works
+
+ 1. The GCloud Function (further called the _proxy_), receives a GraphQL
+    query and an Auth0 access token via a POST request.
+ 2. The proxy uses the Auth0 access token to request the corresponding GitHub
+    access token via the Auth0 Management API.
+     a. If the Auth0 request fails, the proxy echoes that failure back to the
+        requesting app.
+ 3. Once the GitHub access token has been retrieved, the proxy forwards the
+    GraphQL query to the GitHub API, authenticating with the GitHub access
+    token.
+ 4. The response recieved from GitHub is then forwarded back to the original
+    requestor.

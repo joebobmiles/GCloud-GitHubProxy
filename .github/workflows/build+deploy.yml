@@ -20,7 +20,7 @@ jobs:
     - name: Deploy function
       uses: actions-hub/gcloud@289.0.0
       env:
-        PROJECT_ID: ${{}}
-        APPLICATION_CREDENTIALS: ${{}}
+        PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
+        APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       with:
         args: functions deploy ghProxy --runtime nodejs10 --trigger-http --allow-unauthenticated --source functions/

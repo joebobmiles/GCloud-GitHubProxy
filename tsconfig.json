@@ -5,6 +5,7 @@
     "target": "ES5",
     "module": "CommonJS",
     "outDir": "functions",
+    "sourceMap": true
   },
   "exclude": [
     "node_modules"

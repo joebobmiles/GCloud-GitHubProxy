@@ -15,10 +15,9 @@
     "url": "git+https://github.com/joebobmiles/GCloud-GitHubProxy.git"
   },
   "scripts": {
-    "start": "functions-framework --target=ghProxy --source=functions/",
-    "debug": "nodemon --inspect=0.0.0.0 --watch ./functions node_modules/@google-cloud/functions-framework --target=ghProxy --source=functions/",
-    "build": "tsc",
-    "deploy": "npm run build && gcloud functions deploy ghProxy --runtime nodejs8 --trigger-http --allow-unauthenticated --source functions/"
+    "start": "functions-framework --target=ghProxy",
+    "debug": "nodemon --inspect=0.0.0.0 --watch ./functions node_modules/@google-cloud/functions-framework --target=ghProxy",
+    "build": "tsc"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.5.1",

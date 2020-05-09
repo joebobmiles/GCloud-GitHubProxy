@@ -3,5 +3,8 @@
 		{
 			"path": ".."
 		}
-	]
+  ],
+  "settings": {
+    "debug.node.autoAttach": "on"
+  }
 }

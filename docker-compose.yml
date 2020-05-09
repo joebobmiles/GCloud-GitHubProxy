@@ -6,7 +6,8 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: bash -c "npm i && npm start"
+    command: bash -c "npm i && npm run debug"
     ports:
       - 8080:8080
+      - 9229:9229
     env_file: .env.dev

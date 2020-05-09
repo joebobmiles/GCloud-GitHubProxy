@@ -22,5 +22,8 @@ jobs:
       env:
         PROJECT_ID: ${{ secrets.GCLOUD_PROJECT_ID }}
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        AUTH0_URL: ${{ secrets.AUTH0_URL }}
+        AUTH0_ID: ${{ secrets.AUTH0_ID }}
+        AUTH0_SECRET: ${{ secretsAUTH0_SECRET }}
       with:
-        args: functions deploy ghProxy --runtime nodejs10 --trigger-http --allow-unauthenticated --source functions/
+        args: functions deploy ghProxy --runtime nodejs10 --trigger-http --allow-unauthenticated --source functions/ --set-env-vars AUTH0_ID=$AUTH0_ID AUTH0_URL=$AUTH0_URL AUTH0_SECRET=$AUTH0_SECRET

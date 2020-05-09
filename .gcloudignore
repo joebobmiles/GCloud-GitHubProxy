@@ -11,11 +11,15 @@
 # from your .gitignore file, remove the corresponding line
 # below:
 .git
+.github
 .gitignore
 
 node_modules
+
+.vscode
 
 *.ts
 .env
 .env.*
 docker-compose*.yml
+*.md

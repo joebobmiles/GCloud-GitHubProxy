@@ -27,6 +27,21 @@ const makeRequest = (
 }
 
 export const ghProxy = (request: Request, response: Response) => {
+
+
+  response.set("Access-Control-Allow-Origin", "*")
+
+
+  if (request.method === "OPTIONS") {
+    response.set("Access-Control-Allow-Methods", "POST")
+    response.set("Access-Control-Allow-Headers", "Content-Type")
+    response.set("Access-Control-Max-Age", "3600")
+    response.status(204).send("")
+
+    return
+  }
+
+
   /*
   Request the Auth0 Management API access_token
   */
@@ -44,14 +59,22 @@ export const ghProxy = (request: Request, response: Response) => {
     })
   )
 
-  if (JSON.parse(auth0Response).access_token === undefined) {
-    // TODO: RESPOND WITH AUTH0 ERROR
-    console.error(auth0Response)
-    response.status(400).send(auth0Response)
+  let auth0Token
+
+  try {
+    auth0Token = JSON.parse(auth0Response)
+  }
+  catch (error) {
+    console.error(error)
+    response.status(500).send()
     return
   }
 
-  const auth0Token = JSON.parse(auth0Response)
+  if (auth0Token.access_token === undefined) {
+    console.error(auth0Token)
+    response.status(400)
+    return
+  }
 
   /*
   Request the GitHub identity that Auth0 has for the user_id

@@ -28,6 +28,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@octokit/graphql": "^4.4.0",
     "auth0": "^2.25.1",
     "express": "^4.17.1"
   }

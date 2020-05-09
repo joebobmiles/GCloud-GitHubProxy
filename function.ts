@@ -1,36 +1,10 @@
-import * as https from "https"
 import { Request, Response } from "express"
-
-const makeRequest = (
-  options: https.RequestOptions,
-  payload?: any
-) => {
-  let recieved: string
-
-  const request = https.request(
-    options,
-    (response) => response.on("data", (data) => {
-      recieved = data
-    })
-  )
-
-  request.on("error", (error) => {
-    console.error(error)
-  })
-
-  if (options.method === "POST")
-    request.write(payload)
-
-  request.end()
-
-  return recieved
-}
-
-export const ghProxy = (request: Request, response: Response) => {
+import { ManagementClient } from "auth0"
+import { graphql } from "@octokit/graphql"
 
 
+export const ghProxy = async (request: Request, response: Response) => {
   response.set("Access-Control-Allow-Origin", "*")
-
 
   if (request.method === "OPTIONS") {
     response.set("Access-Control-Allow-Methods", "POST")
@@ -42,84 +16,58 @@ export const ghProxy = (request: Request, response: Response) => {
   }
 
 
+  const requestBody = JSON.parse(request.body)
+
+
   /*
   Request the Auth0 Management API access_token
   */
-  const auth0Response = makeRequest(
-    {
-      hostname: process.env.AUTH0_URL,
-      path: "/oauth/token",
-      method: "POST",
-    },
-    JSON.stringify({
-      client_id: process.env.AUTH0_ID,
-      client_secret: process.env.AUTH0_SECRET,
-      audience: `${process.env.AUTH0_URL}/api/v2`,
-      grant_type: "client_credentials"
-    })
-  )
 
-  let auth0Token
+  const auth0 = new ManagementClient({
+    domain: process.env.AUTH0_URL,
+    clientId: process.env.AUTH0_ID,
+    clientSecret: process.env.AUTH0_SECRET
+  })
+
+  let user
 
   try {
-    auth0Token = JSON.parse(auth0Response)
+    user = await auth0.getUser({ id: requestBody.user_id })
+                      .catch((reason) => { throw reason })
   }
-  catch (error) {
-    console.error(error)
-    response.status(500).send()
+  catch (reason) {
+    response.status(reason.statusCode).json({
+      reason: reason.message
+    })
     return
   }
-
-  if (auth0Token.access_token === undefined) {
-    console.error(auth0Token)
-    response.status(400)
-    return
-  }
-
-  /*
-  Request the GitHub identity that Auth0 has for the user_id
-  */
-  const ghTokenResponse = JSON.parse(makeRequest(
-    {
-      hostname: process.env.AUTH0_URL,
-      path: `/api/v2/users/${request.params.user_id}`,
-      method: "GET",
-      headers: {
-        Authorization: `${auth0Token.token_type} ${auth0Token.access_token}`
-      }
-    }
-  ))
-
-  if (ghTokenResponse.identities === undefined) {
-    // TODO: RESPOND WITH AUTH0 ERROR
-    console.error(ghTokenResponse)
-    response.status(400).send(ghTokenResponse)
-    return
-  }
-
-
-  const { query, variables } = request.params
-
 
   /*
   Use the access_token stored in the retrieved identity to make the GH API
   request.
   */
-  const gitHubResponse = JSON.parse(makeRequest(
-    {
-      hostname: "api.github.com",
-      path: "/graphql",
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${ghTokenResponse.identities[0].access_token}`
-      }
-    },
-    JSON.stringify({
+
+  const access_token = user.identities[0].access_token
+  const { query, variables } = requestBody
+
+  let queryResult
+
+  try {
+    queryResult = await graphql(
       query,
-      variables
+      {
+        ...variables,
+        headers: {
+          authorization: `bearer ${access_token}`
+        }
+      }
+    )
+  }
+  catch (error) {
+    response.status(400).json({
+      ...error
     })
-  ))
+  }
 
-
-  response.send(gitHubResponse)
+  response.status(200).json(queryResult)
 }

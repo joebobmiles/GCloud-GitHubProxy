@@ -1,0 +1,11 @@
+version: '3'
+
+services: 
+  dev:
+    image: node:10-slim
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: bash -c "npm i && npm start"
+    ports:
+      - 8080:8080

@@ -24,3 +24,5 @@ node_modules
 docker-compose*.yml
 *.md
 *.map
+tsconfig.json
+package-lock.json

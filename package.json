@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@octokit/graphql": "^4.4.0",
-    "auth0": "^2.27.1",
+    "auth0": "^3.0.1",
     "express": "^4.17.1"
   }
 }
